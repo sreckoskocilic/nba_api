@@ -2,8 +2,6 @@
 
 import warnings
 
-import pytest
-
 from nba_api.stats.endpoints import LeagueGameFinder
 
 
@@ -19,7 +17,7 @@ class TestLeagueGameFinderWarnings:
                 player_or_team_abbreviation="T",
                 season_nullable="2023-24",
                 game_id_nullable="0022301181",
-                get_request=False
+                get_request=False,
             )
 
             # Should emit exactly one warning
@@ -34,11 +32,7 @@ class TestLeagueGameFinderWarnings:
         with warnings.catch_warnings(record=True) as w:
             warnings.simplefilter("always")
 
-            LeagueGameFinder(
-                player_or_team_abbreviation="T",
-                season_nullable="2023-24",
-                get_request=False
-            )
+            LeagueGameFinder(player_or_team_abbreviation="T", season_nullable="2023-24", get_request=False)
 
             # Should not emit any warnings
             assert len(w) == 0
@@ -49,10 +43,7 @@ class TestLeagueGameFinderWarnings:
             warnings.simplefilter("always")
 
             LeagueGameFinder(
-                player_or_team_abbreviation="T",
-                season_nullable="2023-24",
-                game_id_nullable="",
-                get_request=False
+                player_or_team_abbreviation="T", season_nullable="2023-24", game_id_nullable="", get_request=False
             )
 
             # Should not emit any warnings
@@ -64,11 +55,7 @@ class TestLeagueGameFinderInitialization:
 
     def test_endpoint_initialization_without_request(self):
         """Test endpoint initializes without making HTTP request."""
-        endpoint = LeagueGameFinder(
-            player_or_team_abbreviation="T",
-            season_nullable="2023-24",
-            get_request=False
-        )
+        endpoint = LeagueGameFinder(player_or_team_abbreviation="T", season_nullable="2023-24", get_request=False)
 
         assert endpoint.parameters["PlayerOrTeam"] == "T"
         assert endpoint.parameters["Season"] == "2023-24"
@@ -76,10 +63,9 @@ class TestLeagueGameFinderInitialization:
 
     def test_game_id_parameter_mapping(self):
         """Test that game_id_nullable maps to GameID parameter."""
-        endpoint = LeagueGameFinder(
-            player_or_team_abbreviation="T",
-            game_id_nullable="0022301181",
-            get_request=False
-        )
-
-        assert endpoint.parameters["GameID"] == "0022301181"
+        with warnings.catch_warnings(record=True):
+            warnings.simplefilter("always")
+            endpoint = LeagueGameFinder(
+                player_or_team_abbreviation="T", game_id_nullable="0022301181", get_request=False
+            )
+            assert endpoint.parameters["GameID"] == "0022301181"

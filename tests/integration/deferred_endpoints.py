@@ -115,7 +115,9 @@ deferred_endpoints = [
     DeferredEndpoint(ep.ScoreboardV3, game_date="2026-02-01"),
     DeferredEndpoint(ep.ShotChartDetail, player_id="2544", team_id="1610612739"),
     DeferredEndpoint(ep.ShotChartLeagueWide),
-    DeferredEndpoint(ep.ShotChartLineupDetail, group_id="-202689-203493-203501-1626174-1627827-"),
+    DeferredEndpoint(
+        ep.ShotChartLineupDetail, group_id="-202689-203493-203501-1626174-1627827-"
+    ),
     DeferredEndpoint(ep.SynergyPlayTypes),
     DeferredEndpoint(ep.TeamDashLineups, team_id="1610612739"),
     DeferredEndpoint(ep.TeamDashPtPass, team_id="1610612739"),

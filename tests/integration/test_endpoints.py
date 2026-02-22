@@ -29,6 +29,7 @@ import logging
 import time
 
 import pytest
+
 from nba_api.stats import endpoints
 
 # Import test case data (one module per endpoint)
@@ -98,7 +99,11 @@ def _count_dataset_rows(endpoint):
 
     if hasattr(endpoint, "data_sets") and endpoint.data_sets:
         # Try to get dataset names from expected_data
-        expected_dataset_names = list(endpoint.expected_data.keys()) if hasattr(endpoint, "expected_data") else []
+        expected_dataset_names = (
+            list(endpoint.expected_data.keys())
+            if hasattr(endpoint, "expected_data")
+            else []
+        )
 
         for i, dataset in enumerate(endpoint.data_sets):
             df = dataset.get_data_frame()
@@ -106,7 +111,11 @@ def _count_dataset_rows(endpoint):
             total_rows += rows
 
             # Try to get dataset name
-            dataset_name = expected_dataset_names[i] if i < len(expected_dataset_names) else f"Dataset{i}"
+            dataset_name = (
+                expected_dataset_names[i]
+                if i < len(expected_dataset_names)
+                else f"Dataset{i}"
+            )
             dataset_row_counts[dataset_name] = rows
 
     # Log per-dataset row counts
@@ -168,7 +177,9 @@ def _validate_row_counts(expected_dict, total_rows):
         return False
 
     if "exact_rows" in expected_dict and total_rows != expected_dict["exact_rows"]:
-        logger.error(f"Expected exactly {expected_dict['exact_rows']} rows, got {total_rows}")
+        logger.error(
+            f"Expected exactly {expected_dict['exact_rows']} rows, got {total_rows}"
+        )
         return False
 
     return True
@@ -285,7 +296,9 @@ def validate_dataset_structure(endpoint):
         # Check for extra columns (warning only, not a failure)
         extra_columns = set(actual_columns) - set(expected_columns)
         if extra_columns:
-            logger.warning(f"Dataset '{dataset_name}' has extra columns: {extra_columns}")
+            logger.warning(
+                f"Dataset '{dataset_name}' has extra columns: {extra_columns}"
+            )
 
     logger.info("✓ Dataset structure validation passed")
     return True
@@ -475,7 +488,9 @@ def test_leaguegamefinder(test_case):
 def test_teamgamelog(test_case):
     """Test TeamGameLog with various parameter combinations."""
     time.sleep(0.6)  # Rate limiting
-    run_endpoint_test(endpoints.TeamGameLog, test_case["params"], test_case.get("expected", "success"))
+    run_endpoint_test(
+        endpoints.TeamGameLog, test_case["params"], test_case.get("expected", "success")
+    )
 
 
 # =============================================================================

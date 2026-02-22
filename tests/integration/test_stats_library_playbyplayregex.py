@@ -2,13 +2,15 @@ import datetime
 import time
 
 import pytest
+
 from nba_api.stats.endpoints import PlayByPlay, ScoreboardV2
 from nba_api.stats.library.eventmsgtype import EventMsgType
 from nba_api.stats.library.parameters import LeagueID
 from nba_api.stats.library.playbyplayregex import eventmsgtype_to_re
 
 pytest.skip(
-    "Skipping this test file due to deprecated endpoints and get_normalized_dict method.", allow_module_level=True
+    "Skipping this test file due to deprecated endpoints and get_normalized_dict method.",
+    allow_module_level=True,
 )
 
 
@@ -16,12 +18,18 @@ def pytest_generate_tests(metafunc):
     if "game" in metafunc.fixturenames and "play" in metafunc.fixturenames:
         metafunc.parametrize(
             "game, play",
-            [(game_id, play_by_play) for game_id in get_game_ids() for play_by_play in get_play_by_play(game_id)],
+            [
+                (game_id, play_by_play)
+                for game_id in get_game_ids()
+                for play_by_play in get_play_by_play(game_id)
+            ],
         )
 
 
 def get_game_ids():
-    gamefinder = ScoreboardV2(league_id=LeagueID.nba, day_offset=-1, game_date=datetime.datetime.now())
+    gamefinder = ScoreboardV2(
+        league_id=LeagueID.nba, day_offset=-1, game_date=datetime.datetime.now()
+    )
 
     games_dict = gamefinder.get_normalized_dict()
     games = []
@@ -47,11 +55,15 @@ def play(request):
     return request.param
 
 
-@pytest.mark.skip(reason="playbyplay endpoint returns no data, get_normalized_dict seems to be deprecated")
+@pytest.mark.skip(
+    reason="playbyplay endpoint returns no data, get_normalized_dict seems to be deprecated"
+)
 def play_play(game, play):
     for count in range(0, 1):
         dict_patterns = eventmsgtype_to_re[EventMsgType(play["EVENTMSGTYPE"])]
-        description = play["HOMEDESCRIPTION"] if count == 0 else play["VISITORDESCRIPTION"]
+        description = (
+            play["HOMEDESCRIPTION"] if count == 0 else play["VISITORDESCRIPTION"]
+        )
 
         # Validate description
         if description is not None:

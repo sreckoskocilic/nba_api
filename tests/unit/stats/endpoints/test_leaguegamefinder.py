@@ -74,10 +74,12 @@ class TestLeagueGameFinderInitialization:
 
     def test_game_id_parameter_mapping(self):
         """Test that game_id_nullable maps to GameID parameter."""
-        endpoint = LeagueGameFinder(
-            player_or_team_abbreviation="T",
-            game_id_nullable="0022301181",
-            get_request=False,
-        )
+        with warnings.catch_warnings(record=True) as w:
+            endpoint = LeagueGameFinder(
+                player_or_team_abbreviation="T",
+                game_id_nullable="0022301181",
+                get_request=False,
+            )
 
-        assert endpoint.parameters["GameID"] == "0022301181"
+            assert endpoint.parameters["GameID"] == "0022301181"
+            assert len(w) == 1
